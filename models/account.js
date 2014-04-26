@@ -85,13 +85,26 @@ module.exports = function ( mongoose ) {
 		});
 	}
 	
+	var update = function ( id, username, email, callback ) {
+		user.update (
+			{ _id: id },
+			{ $set: { username: username, email: email}},
+			{ upsert: false },
+			function () {
+				console.log ('Updated user ' + email );
+				callback();
+			}
+		);
+	}
+	
 	return {
 		userSchema : UserSchema,
 		user : user,
 		register: register,
 		login: login,
 		userList: userList,
-		getUserInfo: getUserInfo
+		getUserInfo: getUserInfo,
+		update: update
 	};
 }
 

@@ -51,7 +51,7 @@ module.exports = function ( models, mongoose ) {
 			
 			//Some field is blank - insufficient information
 			console.log('User creation failure: Insufficient data');
-			res.json(400);
+			res.json(400, {});
 			
 		} else {
 
@@ -90,12 +90,35 @@ module.exports = function ( models, mongoose ) {
 		
 	};
 	
+	var update = function ( req, res ) {
+		
+		var id = req.body._id;
+		var email = req.body.email;
+		var username = req.body.username;
+		var password = req.body.password;
+		
+		console.log ( id, email, username, password );
+		
+		
+		if ( id == false ) {
+			res.json ( 400, { error: 'Insufficient Information'});
+		}
+		
+		// the update() function is intended to update user data
+		// password change should be handled separated
+		models.account.update ( id, username, email, function () {
+			res.json ( 200, {});
+		});
+		
+	};
+	
 	return {
 		authenticated: authenticated,
 		register: register,
 		login: login,
 		userList: userList,
-		userInfo: userInfo
+		userInfo: userInfo,
+		update: update
 	};
 
 }

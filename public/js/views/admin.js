@@ -31,27 +31,23 @@ define(['text!templates/admin.html',
 			
 			// ### Details View (DV) ###
 			'click td a.linkshowuser': 'DV_Show',
-			'click #btnDV_Close': 'DV_Close'
-			
+			'click #btnDV_Close': 'DV_Close',
+			'click #btnDV_Cancel': 'DV_Cancel',
+			'click #btnDV_Save': 'DV_Save'
 			
 		},
 		
 		userListPagePrevious: function () {
 			event.preventDefault();
-			
-			console.log ( $(lnkPrevious).attr('rel') );
-			var page = $(lnkPrevious).attr('rel');// ? $(lnkPrevious).attr('rel') : 1;
-			console.log ( page );
+			var page = $(lnkPrevious).attr('rel');
 			var itemsPerPage = 5;
 			this.getUserList ( page, itemsPerPage );
 		},
 		
 		userListPageNext: function () {
 			event.preventDefault();
-			
-			console.log ( $(lnkNext).attr('rel') );
-			var page = $(lnkNext).attr('rel'); //? $(lnkNext).attr('rel') : 2;
-			console.log ( page );
+
+			var page = $(lnkNext).attr('rel');
 			var itemsPerPage = 5;
 			this.getUserList ( page, itemsPerPage );
 		},
@@ -151,15 +147,18 @@ define(['text!templates/admin.html',
 			account.getUserInfo ( id, function( details ){
 				
 				//Display the properties
+				$('#inputDV_id').val(details._id).prop('disabled', true);
 				$('#inputDV_UserName').val(details.username).prop('disabled', true);
 				$('#inputDV_UserEmail').val(details.email).prop('disabled', true);
 				$('#inputDV_UserPassword').val(details.password).prop('disabled', true);
 			});
-			
+			/*
+			<input id="inputDV_id" type="text" style="display:none;"/>
+			*/
 		},
 		
-		DV_Close: function () {
-			
+		DV_Close: function ( event ) {
+			event.preventDefault();
 			$('#btnUserEdit').prop('disabled', true);
 			$('#btnUserDelete').prop('disabled', true);
 			$('#btnUserCreate').prop( 'disabled', false);
@@ -167,7 +166,8 @@ define(['text!templates/admin.html',
 			
 		},
 		
-		userEdit: function () {
+		userEdit: function ( event ) {
+			event.preventDefault();
 			$('#btnUserEdit').prop('disabled', true);
 			$('#btnUserDelete').prop('disabled', true);
 			$('#btnUserCreate').prop( 'disabled', true );
@@ -178,8 +178,56 @@ define(['text!templates/admin.html',
 			$('#inputDV_UserEmail').prop('disabled', false);
 			$('#inputDV_UserPassword').prop('disabled', false);
 			
-		}
+		},
 
+		DV_Cancel: function ( event ) {
+			event.preventDefault();
+			
+			var confirmation = confirm('All the changes made will not be saved. Do you want to cancel anyway?');
+			if ( confirmation == true ) {
+				$('#btnUserEdit').prop('disabled', true);
+				$('#btnUserDelete').prop('disabled', true);
+				$('#btnUserCreate').prop( 'disabled', false);
+				$('#frameDetails').html('');
+
+			} else {
+				//do nothing
+			}
+		},
+		
+		DV_Save: function ( event ) {
+			event.preventDefault();
+			
+			var confirmation = confirm('Do you want to save the changes?');
+			if ( confirmation == true ) {
+				
+				userToUpdate = new account.userModel;
+				userToUpdate.set('_id', $('#inputDV_id').val() );
+				userToUpdate.set('username', $('#inputDV_UserName').val() );
+				userToUpdate.set('email', $('#inputDV_UserEmail').val() );
+				userToUpdate.set('password', $('#inputDV_UserPassword').val() );
+				
+				account.update (userToUpdate, function() {
+					console.log ('update ready, closing dialog');
+					
+					// Probably best idea is to transform DV_Close() into an event
+					// with an even agregator and use it instead of repeating code
+					
+					$('#btnUserEdit').prop('disabled', true);
+					$('#btnUserDelete').prop('disabled', true);
+					$('#btnUserCreate').prop( 'disabled', false);
+					$('#frameDetails').html('');
+					
+				});
+				//userToUpdate.update();
+				
+			} else {
+				//do nothing
+			}
+			
+		}
+		
+		
 	});
 	
 	return viewAdmin;

@@ -46,6 +46,7 @@ app.get('/user', users.actions.userInfo);
 app.get( '/user/list', users.actions.userList );
 app.get( '/account/authenticated', users.actions.authenticated );
 
+app.put( '/user/:id', users.actions.update )
 
 app.post('/user', users.actions.register);
 app.post('/login', users.actions.login)
