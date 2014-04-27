@@ -59,7 +59,7 @@ module.exports = function ( mongoose ) {
 			{ $set: { username: username, email: email}},
 			{ upsert: false },
 			function () {
-				console.log ('Updated user ' + email );
+				console.log ('Updated user ' + email + ' ID: ' + id );
 				callback();
 			}
 		);
@@ -67,7 +67,8 @@ module.exports = function ( mongoose ) {
 	
 	var del = function ( id, callback ) {
 		
-		user.findOneAndRemove ( id, function (err) {
+		console.log('Deleting user: ' + id );
+		user.remove ( { _id: id }, function (err) {
 			if (err) {
 				return console.log(err);
 			} else {

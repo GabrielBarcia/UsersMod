@@ -80,7 +80,7 @@ define(['text!templates/admin.html',
 					userListTable += '</table>';
 					// Previous Next
 					var previousPage = ( page - 1 ) < 1 ? 1 : page - 1 ;
-					var nextPage = previousPage + 2;
+					var nextPage = ( page == 1 ) ? 2 : previousPage + 2 ;
 					
 					userListTable += '<a id="lnkPrevious" href="#" class="pagePrevious" rel="' + previousPage  + '" title="Previous"> Previous </a></br>';
 					userListTable += '<a id="lnkNext" href="#" class="pageNext" rel="' + nextPage  + '" title="Next"> Next </a></br>';
@@ -151,9 +151,7 @@ define(['text!templates/admin.html',
 				$('#inputDV_UserEmail').val(details.email).prop('disabled', true);
 				$('#inputDV_UserPassword').val(details.password).prop('disabled', true);
 			});
-			/*
-			<input id="inputDV_id" type="text" style="display:none;"/>
-			*/
+
 		},
 		
 		DV_Close: function ( event ) {

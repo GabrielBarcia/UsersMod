@@ -109,11 +109,15 @@ module.exports = function ( models, mongoose ) {
 		
 	};
 	
-		var del = function ( req, res ) {
+	var del = function ( req, res ) {
 		
-		var id = req.body._id;
+		var id = req.params.id;
 		
-		if ( id == false ) {
+		
+		//var id = req.body._id;
+		
+		console.log ( 'Route_user Deleting user: ' + id);
+		if ( !id ) {
 			res.json ( 400, { error: 'Insufficient Information'});
 		}
 		

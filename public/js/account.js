@@ -59,11 +59,11 @@ define(['Backbone'], function () {
 		if ( user._id == false ) {
 			console.log ('Insufficient data to update the user');
 		} else {
+			console.log ( 'account updating id:' + user.get('_id') );
 			user.save(
 				null,
 				{
 					success: function ( model, response, options ) {
-						console.log ('Modified user _id: ' + user._id);
 						callback();
 					}
 				}
@@ -76,11 +76,12 @@ define(['Backbone'], function () {
 		if ( user._id == false ) {
 			console.log ('Insufficient data to delete the user');
 		} else {
+			console.log ('Deleting user ' + user.get('_id'));
 			user.destroy (
 				null,
 				{
 					success: function ( model, response, options ) {
-						console.log ('Delet user _id: ' + user._id);
+						console.log ('Delet user _id: ' + user.get('_id'));
 						callback();
 					}
 				}
