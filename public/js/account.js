@@ -76,9 +76,7 @@ define(['Backbone'], function () {
 		if ( user._id == false ) {
 			console.log ('Insufficient data to delete the user');
 		} else {
-			console.log ('Deleting user ' + user.get('_id'));
 			user.destroy (
-				null,
 				{
 					success: function ( model, response, options ) {
 						console.log ('Delet user _id: ' + user.get('_id'));
