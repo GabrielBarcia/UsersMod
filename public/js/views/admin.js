@@ -20,7 +20,7 @@ define(['text!templates/admin.html',
 			// ### MAIN ###
 			'click #btnUserCreate': 'userCreate',
 			'click #btnUserEdit': 'userEdit',
-			//click #btnUserDelete': 'userDelete',
+			'click #btnUserDelete': 'userDelete',
 			'click #lnkPrevious': 'userListPagePrevious',
 			'click #lnkNext': 'userListPageNext',
 			
@@ -62,8 +62,7 @@ define(['text!templates/admin.html',
 					itemsPerPage: itemsPerPage
 				},
 				success: function ( result ) {
-					console.log ('Userlist Query Success');
-				    var userListTable = '<table>';
+					var userListTable = '<table>';
 					
 					//Headers
 					userListTable += '<tr>';
@@ -220,6 +219,39 @@ define(['text!templates/admin.html',
 					
 				});
 				//userToUpdate.update();
+				
+			} else {
+				//do nothing
+			}
+			
+		},
+		
+		/*   =====================
+		     ==== User Delete ====
+		     =====================   */
+		
+		userDelete: function ( event ) {
+			event.preventDefault();
+			
+			var confirmation = confirm('Do you want to delete this user?');
+			if ( confirmation == true ) {
+				
+				userToDelete = new account.userModel;
+				userToDelete.set('_id', $('#inputDV_id').val() );
+				
+				account.del (userToDelete, function() {
+					console.log ('deletion succesful, closing dialog');
+					
+					// Probably best idea is to transform DV_Close() into an event
+					// with an even agregator and use it instead of repeating code
+					
+					$('#btnUserEdit').prop('disabled', true);
+					$('#btnUserDelete').prop('disabled', true);
+					$('#btnUserCreate').prop( 'disabled', false);
+					$('#frameDetails').html('');
+					
+				});
+				
 				
 			} else {
 				//do nothing

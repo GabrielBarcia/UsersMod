@@ -46,10 +46,11 @@ app.get('/user', users.actions.userInfo);
 app.get( '/user/list', users.actions.userList );
 app.get( '/account/authenticated', users.actions.authenticated );
 
-app.put( '/user/:id', users.actions.update )
+app.put( '/user/:id', users.actions.update );
+app.delete( '/user/:id', users.actions.del );
 
 app.post('/user', users.actions.register);
-app.post('/login', users.actions.login)
+app.post('/login', users.actions.login);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

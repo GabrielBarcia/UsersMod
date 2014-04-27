@@ -21,38 +21,6 @@ module.exports = function ( mongoose ) {
 		});
 	};
 
-	/*
-	var registerCallback = function ( err ) {
-		if (err) {
-			console.log(err);
-			return false;
-		}
-		console.log('User Created');
-		return true;
-	}
-	*/
-
-	/* OLD REGISTER
-	var register = function (mongoose){
-		return function ( req, res ) {
-
-			var newUser = new user ({
-				username: req.body.username,
-				email: req.body.email,
-				password: req.body.password
-			});
-
-			newUser.save ( function (err){
-				if (err) {
-					console.log(err);
-					return res.json(400);
-				}
-				console.log('User Created');
-				return res.json(200);
-			});
-		};
-	};
-	*/
 	
 	var login = function ( email, password, callback ) {
 		user.findOne ( {email:email, password: password}, function ( err, doc) {
@@ -97,6 +65,21 @@ module.exports = function ( mongoose ) {
 		);
 	}
 	
+	var del = function ( id, callback ) {
+		
+		user.findOneAndRemove ( id, function (err) {
+			if (err) {
+				return console.log(err);
+			} else {
+				if (callback){
+					return callback();
+				}
+			}
+		});
+
+	}
+
+	
 	return {
 		userSchema : UserSchema,
 		user : user,
@@ -104,13 +87,7 @@ module.exports = function ( mongoose ) {
 		login: login,
 		userList: userList,
 		getUserInfo: getUserInfo,
-		update: update
+		update: update,
+		del: del
 	};
 }
-
-
-/*
-exports.admintool = function(req, res){
-  res.send("respond with a resource");
-};
-*/

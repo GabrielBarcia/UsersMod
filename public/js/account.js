@@ -56,18 +56,31 @@ define(['Backbone'], function () {
 
 	var update = function ( user, callback ) {
 		
-		console.log('reach account');
 		if ( user._id == false ) {
 			console.log ('Insufficient data to update the user');
 		} else {
-			
-			console.log (user);
-			
 			user.save(
 				null,
 				{
-					success: function () {
+					success: function ( model, response, options ) {
 						console.log ('Modified user _id: ' + user._id);
+						callback();
+					}
+				}
+			);
+		}
+	}
+	
+	var del = function ( user, callback ) {
+		
+		if ( user._id == false ) {
+			console.log ('Insufficient data to delete the user');
+		} else {
+			user.destroy (
+				null,
+				{
+					success: function ( model, response, options ) {
+						console.log ('Delet user _id: ' + user._id);
 						callback();
 					}
 				}
@@ -79,6 +92,7 @@ define(['Backbone'], function () {
 		userModel: userModel,
 		quickRegister: quickRegister,
 		getUserInfo: getUserInfo,
-		update: update
+		update: update,
+		del: del
 	};
 });

@@ -97,9 +97,6 @@ module.exports = function ( models, mongoose ) {
 		var username = req.body.username;
 		var password = req.body.password;
 		
-		console.log ( id, email, username, password );
-		
-		
 		if ( id == false ) {
 			res.json ( 400, { error: 'Insufficient Information'});
 		}
@@ -112,13 +109,31 @@ module.exports = function ( models, mongoose ) {
 		
 	};
 	
+		var del = function ( req, res ) {
+		
+		var id = req.body._id;
+		
+		if ( id == false ) {
+			res.json ( 400, { error: 'Insufficient Information'});
+		}
+		
+		// the update() function is intended to update user data
+		// password change should be handled separated
+		models.account.del ( id, function () {
+			res.json ( 200, {});
+		});
+		
+	};
+
+	
 	return {
 		authenticated: authenticated,
 		register: register,
 		login: login,
 		userList: userList,
 		userInfo: userInfo,
-		update: update
+		update: update,
+		del: del
 	};
 
 }
