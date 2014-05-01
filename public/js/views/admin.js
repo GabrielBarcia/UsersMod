@@ -10,9 +10,16 @@ define(['text!templates/admin.html',
 		
 		el: $('#content'),
 		
+		currentPage: null,
+		itemsPerPage: 5,
+		
 		render: function() {
 			this.$el.html(templateAdmin);
-			this.getUserList ( 1, 5 );
+			
+			if (this.currentPage == null) {
+				this.currentPage = 1;
+			}
+			this.getUserList ( this.currentPage, this.itemsPerPage );
 		},
 
 		events: {
@@ -39,17 +46,26 @@ define(['text!templates/admin.html',
 		
 		userListPagePrevious: function () {
 			event.preventDefault();
-			var page = $(lnkPrevious).attr('rel');
-			var itemsPerPage = 5;
-			this.getUserList ( page, itemsPerPage );
+			
+			if ( this.currentPage == 1 ){
+				//Cannot got lower than 1st page
+				this.currentPage = 1;
+			} else {
+				//decrease a page
+				this.currentPage--;
+			}
+			
+			return this.getUserList ( this.currentPage, this.itemsPerPage );
 		},
 		
 		userListPageNext: function () {
 			event.preventDefault();
 
-			var page = $(lnkNext).attr('rel');
-			var itemsPerPage = 5;
-			this.getUserList ( page, itemsPerPage );
+			//increase a page
+			//Need to add a logic for a top limit page
+			this.currentPage++;
+			
+			return this.getUserList ( this.currentPage, this.itemsPerPage );
 		},
 		
 		getUserList: function ( page, itemsPerPage ) {
@@ -80,7 +96,9 @@ define(['text!templates/admin.html',
 					userListTable += '</table>';
 					// Previous Next
 					var previousPage = ( page - 1 ) < 1 ? 1 : page - 1 ;
-					var nextPage = ( page == 1 ) ? 2 : previousPage + 2 ;
+					
+					//probably will need an update when logic for top page is added
+					var nextPage = page + 1;
 					
 					userListTable += '<a id="lnkPrevious" href="#" class="pagePrevious" rel="' + previousPage  + '" title="Previous"> Previous </a></br>';
 					userListTable += '<a id="lnkNext" href="#" class="pageNext" rel="' + nextPage  + '" title="Next"> Next </a></br>';
@@ -107,6 +125,7 @@ define(['text!templates/admin.html',
 		
 		CV_Create: function () {
 			event.preventDefault();
+			var that = this;
 		
 			userToRegister = new account.userModel;
 			userToRegister.set('username', $('#formCV_Create fieldset input#inputCV_UserName').val() );
@@ -117,6 +136,10 @@ define(['text!templates/admin.html',
 			
 			//Clear the form fields values
 			$('#formCV_Create fieldset input').val('')
+			
+			//update user list
+			this.render();
+			
 		},
 		
 		CV_Cancel: function () {
@@ -194,6 +217,7 @@ define(['text!templates/admin.html',
 		
 		DV_Save: function ( event ) {
 			event.preventDefault();
+			var that = this;
 			
 			var confirmation = confirm('Do you want to save the changes?');
 			if ( confirmation == true ) {
@@ -215,6 +239,9 @@ define(['text!templates/admin.html',
 					$('#btnUserCreate').prop( 'disabled', false);
 					$('#frameDetails').html('');
 					
+					//Update the list
+					that.render();
+					
 				});
 				//userToUpdate.update();
 				
@@ -230,6 +257,7 @@ define(['text!templates/admin.html',
 		
 		userDelete: function ( event ) {
 			event.preventDefault();
+			var that = this;
 			
 			var confirmation = confirm('Do you want to delete this user?');
 			if ( confirmation == true ) {
@@ -247,6 +275,9 @@ define(['text!templates/admin.html',
 					$('#btnUserDelete').prop('disabled', true);
 					$('#btnUserCreate').prop( 'disabled', false);
 					$('#frameDetails').html('');
+					
+					//Update the list
+					that.render();
 					
 				});
 				
