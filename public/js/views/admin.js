@@ -1,10 +1,12 @@
 define(['text!templates/admin.html', 
 		'text!templates/admin_userCreate.html', 
 		'text!templates/admin_userViewEdit.html',
+		'views/admin_CV',
 		'account'], 
 	   function (templateAdmin, 
 				  templateUserCreate, 
 				  templateViewEdit,
+				  viewAdminCV,
 				  account){
 	var viewAdmin = Backbone.View.extend({
 		
@@ -119,7 +121,9 @@ define(['text!templates/admin.html',
 		userCreate: function () {
 			event.preventDefault();
 			$('#btnUserCreate').prop( 'disabled', true );
-			$('#frameDetails').html(templateUserCreate);
+			//$('#frameDetails').html(templateUserCreate);
+			var createView = new viewAdminCV();
+			createView.render();
 			
 		},
 		
